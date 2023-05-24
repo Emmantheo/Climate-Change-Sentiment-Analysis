@@ -2,3 +2,64 @@
 #
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://kedro.readthedocs.io/en/stable/data/data_catalog.html
+
+train_data:
+  type: pandas.CSVDataSet
+  filepath: data/01_raw/traindf.csv
+  layer: raw
+  #load_args:
+    #sep: '/t'
+
+cleaned_train_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/cleaned_train_data.csv
+  layer: raw
+  #load_args:
+    #sep: '/t'
+
+new_data:
+  type: pandas.CSVDataSet
+  layer: raw
+  filepath: data/01_raw/new_data.csv
+
+cleaned_new_data:
+  type: pandas.CSVDataSet
+  layer: intermediate
+  filepath: data/02_intermediate/cleaned_new_data.csv
+
+
+#######################
+#  Models             #
+#######################
+
+# saving the text classification model
+
+text_classification.vectorizer:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/vectorizer.pickle
+  backend: pickle
+  layer: models
+
+text_classification.tweet_classifier:
+  type: pickle.PickleDataSet
+  filepath: data/06_models/tweet_classifier.pickle
+  backend: pickle
+  layer: models
+
+
+
+predictions:
+  type: pandas.CSVDataSet
+  #filepath: data/02_intermediate/clean_tweet_data.csv
+  layer: model_output
+  filepath: data/07_model_output/predictions.csv
+  
+
+
+#######################
+#  Metrics             #
+#######################
+  #metrics:
+  #type: tracking.MetricsDataSet
+  #layer: reporting
+  #filepath: data/08_reporting/metrics.json
