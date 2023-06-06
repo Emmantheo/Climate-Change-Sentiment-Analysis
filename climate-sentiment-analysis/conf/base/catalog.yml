@@ -34,13 +34,13 @@ cleaned_new_data:
 
 # saving the text classification model
 
-text_classification.vectorizer:
+data_science.vectorizer:
   type: pickle.PickleDataSet
   filepath: data/06_models/vectorizer.pickle
   backend: pickle
   layer: models
 
-text_classification.tweet_classifier:
+data_science.tweet_classifier:
   type: pickle.PickleDataSet
   filepath: data/06_models/tweet_classifier.pickle
   backend: pickle
