@@ -1,7 +1,7 @@
-### Climate Change Sentiment Analysis
+# Climate Change Sentiment Analysis
 This repository is a complete directory to the climate change sentiment analysis project.
 
-Overview: Climate Change Belief Analysis
+## Overview: Climate Change Belief Analysis
 Many companies are built around lessening one’s environmental impact or carbon footprint. They offer products and services that are environmentally friendly and sustainable, in line with their values and ideals. They would like to determine how people perceive climate change and whether or not they believe it is a real threat. This would add to their market research efforts in gauging how their product/service may be received.
 
 With this context, I am creating Machine Learning system that is able to classify whether or not a person believes in climate change, based on their novel tweet data.
