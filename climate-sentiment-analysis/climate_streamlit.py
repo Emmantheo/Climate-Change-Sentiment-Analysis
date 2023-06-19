@@ -11,6 +11,8 @@ from kedro.config import ConfigLoader
 from kedro.framework.project import settings
 import logging.config
 import spacy
+import requests
+from PIL import Image
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -80,50 +82,47 @@ data_load_state.text("")
 classifier = catalog.load("tweet_classifier")
 vectorizer = catalog.load("vectorizer")
 
-def process_message(message):
-
-    '''
-    TO DO:
-    function that cleans input text data
-    '''
-
-    # Load the spaCy English model
-    nlp = spacy.load("en_core_web_sm")
-
-    # Process the message
-    doc = nlp(message)
-
-    # Example NLP processing step
-    transformed_message = " ".join([token.lemma_ for token in doc])  # Lemmatization
-
-    # Return the transformed message
-    return transformed_message
-
-def text_predict(my_text):
-    '''
-    Takes in text (from text box - string), then vectorizes the text and then applies
-    the trained linSVC model to get SDG label predictions
-    '''
-    #doc = list(my_text.split(" "))
-    doc = vectorizer.transform(my_text)
-    predicted = classifier.predict(doc)
-
-    return predicted
 
 def main():
-    
+    # Get the image from a URL
+    image1_url = "https://i.guim.co.uk/img/media/377e5731a1651bcdeea9d3d519b8e7786c2c7fdb/0_133_4000_2400/master/4000.jpg?width=620&quality=45&dpr=2&s=none"
+    response = requests.get(image1_url, stream=True)
+    image = Image.open(response.raw)
+
+    # Reduce the height and width of the image
+    new_width1 = 400  # Desired width
+    new_height1 = 100  # Desired height
+    resized_image = image.resize((new_width1, new_height1))
+
+    # Display the resized image in Streamlit
+    st.image(resized_image, use_column_width=True)
+
+
     st.markdown('##### What is the public perception of climate change?')
     
     message1 = st.text_area("Type in or paste any text segment (e.g. publication excerpt, news article) in the text box below", "Type Here")
     if st.button("Get Sentiment"):
         with st.spinner('Running model...'):
             time.sleep(1)
-        clean_message = process_message(message1)
-        result1 = text_predict(clean_message)
+        vect_text = vectorizer.transform([message1]).toarray()
+        predicted = classifier.predict(vect_text)
+        #clean_message = process_message(message1)
+        #result1 = text_predict(clean_message)
+        word = ''
+        if predicted == 0:
+            word = '"# Neutral". It neither supports nor refutes the belief of man-made climate change'
+        elif predicted == 1:
+            word = '"# Pro". The tweet supports the belief of man-made climate change'
+        elif predicted == 2:
+            word = '**News**. The tweet links to factual news about climate change'
+        else:
+            word = 'The tweet do not belief in man-made climate change'
+
+        st.success("Text Categorized as: {}".format(word))
  
 
      
-    
+
 
 if __name__ == '__main__':
     main()
